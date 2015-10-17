@@ -3,7 +3,7 @@
 #include <time.h>
 
 //Constantes
-#define TAILLE 10
+#define TAILLE 20
 #define CYCLE 200
 
 
@@ -63,7 +63,7 @@ void afficher(int **matrice)
 //Modification de la vie en fontion de l'entourage
 void modifierMatrice(int **matrice)
 {
-    int i, j;
+    int i, j,retourAnalMat;
     
     for(i=0;i<TAILLE;i++)
     {
@@ -71,18 +71,20 @@ void modifierMatrice(int **matrice)
         {
             if(matrice[i][j]==1)
             {
-                if((0<=AnalyseMatrice(matrice,i,j))||(1>=AnalyseMatrice(matrice,i,j)))
+                retourAnalMat=AnalyseMatrice(matrice,i,j);
+                if(0<=retourAnalMat && 1>=retourAnalMat)
                     matrice[i][j]=0;
-                else if ((2<=AnalyseMatrice(matrice,i,j))||(3>=AnalyseMatrice(matrice,i,j)))
+                else if(2<=retourAnalMat && 3>=retourAnalMat)
                     matrice[i][j]=1;
-                else if ((4<=AnalyseMatrice(matrice,i,j))||(8>=AnalyseMatrice(matrice,i,j)))
+                else if (4<=retourAnalMat && 8>=retourAnalMat)
                     matrice[i][j]=0;
                 else
                     printf("Erreur : nombre de voisins inconnu");
             }
             else
             {
-                if(AnalyseMatrice(matrice,i,j)==3)
+                retourAnalMat=AnalyseMatrice(matrice,i,j);
+                if(retourAnalMat==3)
                     matrice[i][j]=1;
             }
         }
@@ -95,7 +97,7 @@ void modifierMatrice(int **matrice)
 int comptNbVoisins(int **sousmatrice)
 {
     int i, j;
-    int compteur_Nb_Voisins;
+    int compteur_Nb_Voisins=0;
     
     for (i=0 ; i<3 ; i++){
         for (j=0 ; j<3 ; j++)
@@ -117,10 +119,13 @@ int comptNbVoisins(int **sousmatrice)
 int AnalyseMatrice(int **matrice, int l, int c)
 {
     int i, j, k, t;
+    int nbRetour;
+    
     int **sous_Matrice;
     sous_Matrice=malloc(3*sizeof(int*));
     for (i=0 ; i<3 ; i++)
         sous_Matrice[i]=malloc(3*sizeof(int));
+    
     
     for(k=0,i=l-1 ; i<=l+1 ; i++,k++)
     {
@@ -130,7 +135,8 @@ int AnalyseMatrice(int **matrice, int l, int c)
         }
     }
     
-    return comptNbVoisins(sous_Matrice);
+    nbRetour=comptNbVoisins(sous_Matrice);
+    return nbRetour;
 }
 
 
@@ -157,7 +163,7 @@ int main()
     
     printf("La population au départ : \n");
     afficher(matrice);
-    printf("Pressez sur ENTER pour continuer...\n");
+    printf("\nPressez sur ENTER pour continuer...\n");
     getchar();
     
     
